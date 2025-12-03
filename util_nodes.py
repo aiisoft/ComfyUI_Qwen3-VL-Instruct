@@ -184,6 +184,77 @@ class VideoLoader(ComfyNodeABC):
         return True  # 输入有效
 
 
+# 文本显示节点类
+class DisplayText:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required": {
+                "text": ("STRING", {"multiline": True, "forceInput": True}),
+            }
+        }
+
+    INPUT_IS_LIST = True
+    RETURN_TYPES = ("STRING",)
+    OUTPUT_NODE = True
+    OUTPUT_IS_LIST = (True,)
+    FUNCTION = "display_text"
+    CATEGORY = "Comfyui_Qwen3-VL-Instruct"
+
+    def display_text(self, text):
+        return {"ui": {"text": text}, "result": (text,)}
+
+
+# 字符串保存节点类
+class SaveString:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required": {
+                "string": ("STRING", {"multiline": True, "forceInput": True}),
+                "filename": ("STRING", {"default": "output.txt"}),
+                "append": ("BOOLEAN", {"default": True}),
+            }
+        }
+
+    INPUT_IS_LIST = True
+    RETURN_TYPES = ()
+    OUTPUT_NODE = True
+    OUTPUT_IS_LIST = ()
+    FUNCTION = "save_string"
+    CATEGORY = "Comfyui_Qwen3-VL-Instruct"
+
+    def save_string(self, string, filename, append):
+        # 确保输入是列表格式
+        if not isinstance(string, list):
+            string = [string]
+        if not isinstance(filename, list):
+            filename = [filename] * len(string)
+        if not isinstance(append, list):
+            append = [append] * len(string)
+        
+        for s, fname, app in zip(string, filename, append):
+            # 获取输出目录
+            output_dir = folder_paths.get_output_directory()
+            file_path = os.path.join(output_dir, fname)
+            
+            # 确保s是字符串，如果是列表则转换
+            if isinstance(s, list):
+                s = '\n'.join(str(item) for item in s)
+            elif not isinstance(s, str):
+                s = str(s)
+            
+            # 写入或追加文件
+            mode = "a" if app else "w"
+            with open(file_path, mode, encoding="utf-8") as f:
+                if app and os.path.exists(file_path) and os.path.getsize(file_path) > 0:
+                    # 如果是追加模式且文件已存在并有内容，添加分隔线
+                    f.write('\n' + '='*50 + '\n')
+                f.write(s)
+        
+        return {"ui": {"text": ["String saved successfully!"]}, "result": ()}
+
+
 # 视频加载节点类（通过手动输入路径）
 class VideoLoaderPath(ComfyNodeABC):
     # 定义节点的输入参数类型

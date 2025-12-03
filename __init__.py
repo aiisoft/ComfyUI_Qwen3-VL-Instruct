@@ -1,5 +1,5 @@
 from .nodes import Qwen3_VQA
-from .util_nodes import ImageLoader, VideoLoader, VideoLoaderPath
+from .util_nodes import ImageLoader, VideoLoader, VideoLoaderPath, DisplayText, SaveString
 from .path_nodes import MultiplePathsInput
 
 WEB_DIRECTORY = "./web"
@@ -11,6 +11,8 @@ NODE_CLASS_MAPPINGS = {
     "VideoLoader": VideoLoader,
     "VideoLoaderPath": VideoLoaderPath,
     "MultiplePathsInput": MultiplePathsInput,
+    "DisplayText": DisplayText,
+    "SaveString": SaveString,
 }
 
 # A dictionary that contains the friendly/humanly readable titles for the nodes
@@ -20,4 +22,6 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "VideoLoader": "Load Video Advanced",
     "VideoLoaderPath": "Load Video Advanced (Path)",
     "MultiplePathsInput": "Multiple Paths Input",
+    "DisplayText": "Display Text",
+    "SaveString": "Save String",
 }
