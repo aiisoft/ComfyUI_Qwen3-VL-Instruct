@@ -1,9 +1,10 @@
 torch
+modelscope
 torchvision
 torchaudio
 numpy
 pillow
-huggingface_hub
+
 accelerate
 optimum
 av
